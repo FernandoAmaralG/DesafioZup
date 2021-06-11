@@ -42,8 +42,7 @@ public class VeiculoService {
 
 			veiculo.setUsuario(usuario.get());
 
-			ValorResponse valorResponse = apiFipeService.obterValor(veiculo.getMarca(), veiculo.getModelo(),
-					veiculo.getAno());
+			ValorResponse valorResponse = apiFipeService.obterValor(veiculo.getMarca(), veiculo.getModelo(), veiculo.getAno());
 
 			if (valorResponse != null) {
 
@@ -114,8 +113,7 @@ public class VeiculoService {
 
 		} catch (DataIntegrityViolationException e) {
 
-			throw new EntidadeEmUsoException(
-					String.format("Veículo de id %d não pode ser removido, pois está em uso.", id));
+			throw new EntidadeEmUsoException(String.format("Veículo de id %d não pode ser removido, pois está em uso.", id));
 
 		}
 

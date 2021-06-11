@@ -24,46 +24,63 @@ public class UsuarioService {
 
 	@Transactional
 	public Usuario criar(Usuario usuario) {
+
 		return usuarioRepository.save(usuario);
+
 	}
 
 	@Transactional
 	public void excluir(String cpf) {
+
 		try {
+
 			Optional<Usuario> usuario = usuarioRepository.findById(cpf);
+
 			if (usuario.isPresent()) {
+
 				usuarioRepository.delete(usuario.get());
+
 			}
 
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(
-					String.format("Não existe um cadastro de usuario com cpf %s.", cpf));
+
+			throw new EntidadeNaoEncontradaException(String.format("Não existe um cadastro de usuario com cpf %s.", cpf));
+
 		} catch (DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException(
-					String.format("Usuario de cpf %s não pode ser removido, pois está em uso.", cpf));
+
+			throw new EntidadeEmUsoException(String.format("Usuario de cpf %s não pode ser removido, pois está em uso.", cpf));
+
 		}
 
 	}
 
 	@Transactional(value = TxType.NOT_SUPPORTED)
 	public Usuario obter(String cpf) {
+
 		Optional<Usuario> usuario = usuarioRepository.findById(cpf);
 
 		if (usuario.isPresent()) {
+
 			return usuario.get();
+
 		}
 
 		return null;
+
 	}
 
 	@Transactional(value = TxType.NOT_SUPPORTED)
 	public List<Usuario> listar() {
+
 		return usuarioRepository.findAll();
+
 	}
 
 	@Transactional
 	public Usuario atualizar(Usuario usuario) {
+
 		return usuarioRepository.save(usuario);
+
 	}
 
 }

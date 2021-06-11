@@ -57,6 +57,7 @@ public class Veiculo {
 	private Usuario usuario;
 
 	public void calcularDiaRodizio() {
+
 		char ultimoCaracterAno = getAno().charAt(getAno().length() - 1);
 
 		int ultimoNumeroAno = Character.getNumericValue(ultimoCaracterAno);

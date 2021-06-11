@@ -30,50 +30,67 @@ public class UsuarioController {
 
 	@GetMapping
 	public List<Usuario> listar() {
+
 		return usuarioService.listar();
+
 	}
 
 	@GetMapping("/{cpf}")
 	public ResponseEntity<Usuario> obter(@PathVariable String cpf) {
+
 		Usuario usuario = usuarioService.obter(cpf);
 
 		if (usuario != null) {
+
 			return ResponseEntity.ok(usuario);
+
 		}
 
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Usuario criar(@RequestBody Usuario usuario) {
+
 		return usuarioService.criar(usuario);
+
 	}
 
 	@PutMapping("/{cpf}")
 	public ResponseEntity<Usuario> atualizar(@PathVariable String cpf, @RequestBody Usuario usuario) {
+
 		Usuario usuarioAtual = usuarioService.obter(cpf);
 
 		if (usuarioAtual != null) {
 
 			Usuario usuarioAtualizado = usuarioService.atualizar(usuario);
+
 			return ResponseEntity.ok(usuarioAtualizado);
 		}
 
 		return ResponseEntity.notFound().build();
+
 	}
 
 	@DeleteMapping("/{cpf}")
 	public ResponseEntity<Usuario> excluir(@PathVariable String cpf) {
+
 		try {
+
 			usuarioService.excluir(cpf);
 
 			return ResponseEntity.noContent().build();
 
 		} catch (EntidadeNaoEncontradaException e) {
+
 			return ResponseEntity.notFound().build();
+
 		} catch (EntidadeEmUsoException e) {
+
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+
 		}
 
 	}

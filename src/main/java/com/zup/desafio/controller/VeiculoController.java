@@ -31,41 +31,61 @@ public class VeiculoController {
 
 	@PostMapping("/usuarios/{cpf}/veiculos")
 	public ResponseEntity<?> criar(@PathVariable String cpf, @RequestBody Veiculo veiculo) {
+
 		try {
+
 			Veiculo veiculoCriado = veiculoService.criar(cpf, veiculo);
+
 			return ResponseEntity.status(HttpStatus.CREATED).body(veiculoCriado);
+
 		} catch (EntidadeNaoEncontradaException e) {
+
 			return ResponseEntity.badRequest().body(e.getMessage());
+
 		}
 
 	}
 
 	@GetMapping("/usuarios/{cpf}/veiculos")
 	public List<Veiculo> listar(@PathVariable String cpf) {
+
 		return veiculoService.listar(cpf);
+
 	}
 
 	@PutMapping("/usuarios/{cpf}/veiculos")
 	public ResponseEntity<Veiculo> atualizar(@PathVariable String cpf, @RequestBody Veiculo veiculo) {
+
 		try {
+
 			Veiculo veiculoAtualizado = veiculoService.atualizar(cpf, veiculo);
+
 			return ResponseEntity.ok(veiculoAtualizado);
+
 		} catch (EntidadeNaoEncontradaException e) {
+
 			return ResponseEntity.notFound().build();
+
 		}
 
 	}
 
 	@DeleteMapping("/veiculos/{id}")
 	public ResponseEntity<Veiculo> excluir(@PathVariable Long id) {
+
 		try {
 			veiculoService.excluir(id);
 
 			return ResponseEntity.noContent().build();
+
 		} catch (EntidadeNaoEncontradaException e) {
+
 			return ResponseEntity.notFound().build();
+
 		} catch (EntidadeEmUsoException e) {
+
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+
 		}
 	}
 

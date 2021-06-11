@@ -42,7 +42,7 @@ public class UsuarioController {
 
 		if (usuario != null) {
 
-			return ResponseEntity.ok(usuario);
+			return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
 
 		}
 
@@ -52,9 +52,19 @@ public class UsuarioController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Usuario criar(@RequestBody Usuario usuario) {
+	public ResponseEntity<?> criar(@RequestBody Usuario usuario) {
 
-		return usuarioService.criar(usuario);
+		Usuario usuarioCriado = usuarioService.criar(usuario);
+
+		try {
+
+			return ResponseEntity.status(HttpStatus.CREATED).body(usuarioCriado);
+
+		} catch (EntidadeNaoEncontradaException e) {
+
+			return ResponseEntity.badRequest().body(e.getMessage());
+
+		}
 
 	}
 

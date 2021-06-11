@@ -1,9 +1,11 @@
 package com.zup.desafio.service;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
+
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -31,55 +33,7 @@ public class VeiculoService {
 	@Autowired
 	private ApiFipeService apiFipeService;
 
-	public String retornaDiaSemana() {
-
-		Calendar calendario = Calendar.getInstance();
-
-		int diaSemana = calendario.get(Calendar.DAY_OF_WEEK);
-
-		return pesquisarDiaSemana(diaSemana);
-
-	}
-
-	public String pesquisarDiaSemana(int _diaSemana) {
-		String diaSemana = null;
-
-		switch (_diaSemana) {
-
-		case 1: {
-			diaSemana = "Domingo";
-			break;
-		}
-		case 2: {
-			diaSemana = "Segunda-Feira";
-			break;
-		}
-		case 3: {
-			diaSemana = "Terça-Feira";
-			break;
-		}
-		case 4: {
-			diaSemana = "Quarta-Feira";
-			break;
-		}
-		case 5: {
-			diaSemana = "Quinta-Feira";
-			break;
-		}
-		case 6: {
-			diaSemana = "Sexta-Feira";
-			break;
-		}
-		case 7: {
-			diaSemana = "Sábado";
-			break;
-		}
-
-		}
-		return diaSemana;
-
-	}
-
+	@Transactional
 	public Veiculo criar(String cpf, Veiculo veiculo) {
 
 		Optional<Usuario> usuario = usuarioRepository.findById(cpf);
@@ -95,83 +49,9 @@ public class VeiculoService {
 
 				veiculo.setValor(valorResponse.getValor());
 
-				char ultimoCaracterAno = veiculo.getAno().charAt(veiculo.getAno().length() - 3);
-
-				int ultimoNumeroAno = Character.getNumericValue(ultimoCaracterAno);
-
-				if (ultimoNumeroAno == 0 || ultimoNumeroAno == 1) {
-
-					veiculo.setDiaRodizio("Segunda-Feira");
-
-					if (veiculo.getDiaRodizio().equals(retornaDiaSemana())) {
-
-						veiculo.setRodizioAtivo(true);
-
-					} else {
-
-						veiculo.setRodizioAtivo(false);
-
-					}
-
-				} else if (ultimoNumeroAno == 2 || ultimoNumeroAno == 3) {
-
-					veiculo.setDiaRodizio("Terça-Feira");
-
-					if (veiculo.getDiaRodizio().equals(retornaDiaSemana())) {
-
-						veiculo.setRodizioAtivo(true);
-
-					} else {
-
-						veiculo.setRodizioAtivo(false);
-
-					}
-
-				} else if (ultimoNumeroAno == 4 || ultimoNumeroAno == 5) {
-
-					veiculo.setDiaRodizio("Quarta-Feira");
-
-					if (veiculo.getDiaRodizio().equals(retornaDiaSemana())) {
-
-						veiculo.setRodizioAtivo(true);
-
-					} else {
-
-						veiculo.setRodizioAtivo(false);
-
-					}
-
-				} else if (ultimoNumeroAno == 6 || ultimoNumeroAno == 7) {
-
-					veiculo.setDiaRodizio("Quinta-Feira");
-
-					if (veiculo.getDiaRodizio().equals(retornaDiaSemana())) {
-
-						veiculo.setRodizioAtivo(true);
-
-					} else {
-
-						veiculo.setRodizioAtivo(false);
-
-					}
-
-				} else if (ultimoNumeroAno == 8 || ultimoNumeroAno == 9) {
-
-					veiculo.setDiaRodizio("Sexta-Feira");
-
-					if (veiculo.getDiaRodizio().equals(retornaDiaSemana())) {
-
-						veiculo.setRodizioAtivo(true);
-
-					} else {
-
-						veiculo.setRodizioAtivo(false);
-
-					}
-
-				}
-
 			}
+
+			veiculo.calcularDiaRodizio();
 
 			return veiculoRepository.save(veiculo);
 
@@ -181,6 +61,7 @@ public class VeiculoService {
 
 	}
 
+	@Transactional(value = TxType.NOT_SUPPORTED)
 	public List<Veiculo> listar(String cpf) {
 
 		Optional<Usuario> usuario = usuarioRepository.findById(cpf);
@@ -195,6 +76,7 @@ public class VeiculoService {
 
 	}
 
+	@Transactional
 	public Veiculo atualizar(String cpf, Veiculo veiculo) {
 
 		Optional<Usuario> usuario = usuarioRepository.findById(cpf);
@@ -213,6 +95,7 @@ public class VeiculoService {
 
 	}
 
+	@Transactional
 	public void excluir(Long id) {
 
 		try {
@@ -238,6 +121,7 @@ public class VeiculoService {
 
 	}
 
+	@Transactional(value = TxType.NOT_SUPPORTED)
 	public Veiculo obter(Long id) {
 
 		Optional<Veiculo> veiculo = veiculoRepository.findById(id);

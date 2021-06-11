@@ -30,12 +30,12 @@ public class VeiculoController {
 	public TabelaFipeClient fipeClient;
 
 	@PostMapping("/usuarios/{cpf}/veiculos")
-	public ResponseEntity<Veiculo> criar(@PathVariable String cpf, @RequestBody Veiculo veiculo) {
+	public ResponseEntity<?> criar(@PathVariable String cpf, @RequestBody Veiculo veiculo) {
 		try {
 			Veiculo veiculoCriado = veiculoService.criar(cpf, veiculo);
 			return ResponseEntity.status(HttpStatus.CREATED).body(veiculoCriado);
 		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 
 	}

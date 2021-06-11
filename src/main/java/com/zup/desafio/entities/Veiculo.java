@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.zup.desafio.util.DataUtils;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -48,11 +49,71 @@ public class Veiculo {
 	private String diaRodizio;
 
 	@Column(name = "rodizioAtivo")
-	private Boolean rodizioAtivo;
+	private boolean rodizioAtivo;
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "cpf")
 	@JsonIgnore
 	private Usuario usuario;
+
+	public void calcularDiaRodizio() {
+		char ultimoCaracterAno = getAno().charAt(getAno().length() - 1);
+
+		int ultimoNumeroAno = Character.getNumericValue(ultimoCaracterAno);
+
+		String diaSemana = DataUtils.retornaDiaSemana();
+
+		if (ultimoNumeroAno == 0 || ultimoNumeroAno == 1) {
+
+			setDiaRodizio("Segunda-Feira");
+
+			if (getDiaRodizio().equals(diaSemana)) {
+
+				setRodizioAtivo(true);
+
+			}
+
+		} else if (ultimoNumeroAno == 2 || ultimoNumeroAno == 3) {
+
+			setDiaRodizio("Terça-Feira");
+
+			if (getDiaRodizio().equals(diaSemana)) {
+
+				setRodizioAtivo(true);
+
+			}
+
+		} else if (ultimoNumeroAno == 4 || ultimoNumeroAno == 5) {
+
+			setDiaRodizio("Quarta-Feira");
+
+			if (getDiaRodizio().equals(diaSemana)) {
+
+				setRodizioAtivo(true);
+
+			}
+
+		} else if (ultimoNumeroAno == 6 || ultimoNumeroAno == 7) {
+
+			setDiaRodizio("Quinta-Feira");
+
+			if (getDiaRodizio().equals(diaSemana)) {
+
+				setRodizioAtivo(true);
+
+			}
+
+		} else if (ultimoNumeroAno == 8 || ultimoNumeroAno == 9) {
+
+			setDiaRodizio("Sexta-Feira");
+
+			if (getDiaRodizio().equals(diaSemana)) {
+
+				setRodizioAtivo(true);
+
+			}
+
+		}
+	}
 
 }

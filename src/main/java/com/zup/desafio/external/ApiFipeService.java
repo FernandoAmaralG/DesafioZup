@@ -23,38 +23,13 @@ public class ApiFipeService {
 
 	public ValorResponse obterValor(String nomeMarca, String nomeModelo, String anoModelo) {
 
-		List<MarcaResponse> marcas = fipeClient.listarMarcas();
-
-		MarcaResponse marcaObtida = null;
-
-		for (MarcaResponse marcaResponse : marcas) {
-
-			if (marcaResponse.getNome().equals(nomeMarca)) {
-
-				marcaObtida = marcaResponse;
-
-				break;
-
-			}
-		}
+		MarcaResponse marcaObtida = obterMarca(nomeMarca);
 
 		Modelo modeloObtido = null;
 
 		if (marcaObtida != null) {
 
-			ModeloResponse modeloResponse = fipeClient.listarModelos(marcaObtida.getCodigo());
-
-			for (Modelo modelo : modeloResponse.getModelos()) {
-
-				if (modelo.getNome().equals(nomeModelo)) {
-
-					modeloObtido = modelo;
-
-					break;
-
-				}
-
-			}
+			modeloObtido = obterModelo(nomeModelo, marcaObtida);
 
 		}
 
@@ -62,19 +37,7 @@ public class ApiFipeService {
 
 		if (marcaObtida != null && modeloObtido != null) {
 
-			List<AnoResponse> anosResponse = fipeClient.listarAnos(marcaObtida.getCodigo(), modeloObtido.getCodigo());
-
-			for (AnoResponse ano : anosResponse) {
-
-				if (ano.getCodigo().equals(anoModelo)) {
-
-					anoObtido = ano;
-
-					break;
-
-				}
-
-			}
+			anoObtido = obterAno(anoModelo, marcaObtida, modeloObtido);
 
 		}
 
@@ -86,6 +49,55 @@ public class ApiFipeService {
 
 		return null;
 
+	}
+
+	private AnoResponse obterAno(String anoModelo, MarcaResponse marcaObtida, Modelo modeloObtido) {
+
+		List<AnoResponse> anosResponse = fipeClient.listarAnos(marcaObtida.getCodigo(), modeloObtido.getCodigo());
+
+		for (AnoResponse ano : anosResponse) {
+
+			if (ano.getCodigo().startsWith(anoModelo)) {
+
+				return ano;
+
+			}
+
+		}
+		return null;
+	}
+
+	private Modelo obterModelo(String nomeModelo, MarcaResponse marcaObtida) {
+
+		ModeloResponse modeloResponse = fipeClient.listarModelos(marcaObtida.getCodigo());
+
+		for (Modelo modelo : modeloResponse.getModelos()) {
+
+			if (modelo.getNome().equals(nomeModelo)) {
+
+				return modelo;
+
+			}
+
+		}
+
+		return null;
+	}
+
+	private MarcaResponse obterMarca(String nomeMarca) {
+
+		List<MarcaResponse> marcas = fipeClient.listarMarcas();
+
+		for (MarcaResponse marcaResponse : marcas) {
+
+			if (marcaResponse.getNome().equals(nomeMarca)) {
+
+				return marcaResponse;
+
+			}
+		}
+
+		return null;
 	}
 
 }
